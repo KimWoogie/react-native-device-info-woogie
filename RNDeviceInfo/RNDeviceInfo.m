@@ -17,6 +17,12 @@
 
 }
 
+/*
+2020.0420 edited by woogie.kim
+UIWebView -> WKWebView로 변경
+*/
+NSString* userAgentString = nil;
+
 RCT_EXPORT_MODULE()
 
 - (dispatch_queue_t)methodQueue
@@ -165,8 +171,18 @@ RCT_EXPORT_MODULE()
 
 - (NSString*) userAgent
 {
-    UIWebView* webView = [[UIWebView alloc] initWithFrame:CGRectZero];
-    return [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
+    /*
+     2020.0420 edited by woogie.kim
+     UIWebView -> WKWebView로 변경
+     */
+    //    UIWebView* webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    //    return [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
+    WKWebView* webView = [[WKWebView alloc] initWithFrame:CGRectZero];
+    [webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(id __nullable userAgent, NSError * __nullable error) {
+        NSLog(@"%@", userAgent);
+        userAgentString = userAgent;
+    }];
+    return userAgentString;
 }
 
 - (NSString*) deviceLocale
@@ -189,13 +205,17 @@ RCT_EXPORT_MODULE()
     NSString *uniqueId = [identifierForVendor UUIDString];
     NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"SBFormattedPhoneNumber"];
     
-//    NSLog(@"pre phoneNumber %@", phoneNumber);
+        
+//       NSLog(@"pre phoneNumber %@", phoneNumber);
+    
     if(phoneNumber==(id) [NSNull null] || [phoneNumber length]==0 || [phoneNumber isEqualToString:@""])
     {
         phoneNumber = @"";
     }
+    
 //    NSLog(@"phoneNumber %@", phoneNumber);
-    //ios phone number not allow
+
+//ios phone number not allow
     
     NSString * bundleId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
     NSString * appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
@@ -240,6 +260,7 @@ RCT_EXPORT_MODULE()
 //             @"userAgent": self.userAgent,
 //             };
 //
+
 }
 
 + (BOOL)requiresMainQueueSetup

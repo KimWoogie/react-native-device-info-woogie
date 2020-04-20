@@ -6,7 +6,11 @@
 //  Copyright © 2015 Learnium Limited. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+/*
+2020.0420 edited by woogie.kim
+UIWebView -> WKWebView로 변경
+*/
+#import <WebKit/WebKit.h>
 #import <sys/utsname.h>
 
 #import "RCTBridgeModule.h"
